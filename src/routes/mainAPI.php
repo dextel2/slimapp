@@ -87,10 +87,14 @@ $app->get('/api/getCandidatePersonalDetails/{id}', function(Request $request, Re
 
 // return login
 $app->post('/api/login/', function(Request $request, Response $response){
+
     $email = $request->getParam('email');
     $password = $request->getParam('password');
+    $role = 'Candidate';
 
-    $sql = "SELECT * FROM userregistration WHERE email = ? AND password = ?";
+    $sql = "SELECT UID,fullname,email,c_date FROM userregistration 
+            WHERE email = ? 
+            AND password = ?";
 
     try{
         // Get DB Object
@@ -102,13 +106,14 @@ $app->post('/api/login/', function(Request $request, Response $response){
 
         $stmt->bindParam(1, $email);
         $stmt->bindParam(2, $password);
-  
+        
         $stmt->execute();
         if($stmt->rowCount() > 0){
-            echo '{"notice": {"text": "true"}';
+            echo '{"data": {"status":200,"response":'. json_encode($stmt->fetch(PDO::FETCH_OBJ)).'}}';
+            
         }
         else {
-            echo '{"notice": {"text": "false"}';
+            echo '{"notice": {"status": 404}}';
         }
 
     } catch(PDOException $e){
