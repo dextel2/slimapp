@@ -3,8 +3,8 @@
         // Properties
         private $dbhost = 'localhost';
         private $dbuser = 'root';
-        private $dbpass = '123456';
-        private $dbname = 'slimapp';
+        private $dbpass = '';
+        private $dbname = 'placement2018';
 
         // Connect
         public function connect(){

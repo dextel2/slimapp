@@ -16,9 +16,9 @@ $app->add(function ($req, $res, $next) {
             ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
 });
 
-// Get All Customers
-$app->get('/api/customers', function(Request $request, Response $response){
-    $sql = "SELECT * FROM customers";
+// Get All Candidates
+$app->get('/api/getCandidates', function(Request $request, Response $response){
+    $sql = "SELECT * FROM userregistration WHERE isActive=1 AND role='Candidate'";
 
     try{
         // Get DB Object
@@ -35,11 +35,12 @@ $app->get('/api/customers', function(Request $request, Response $response){
     }
 });
 
-// Get Single Customer
-$app->get('/api/customer/{id}', function(Request $request, Response $response){
+
+// Get Single Candidate
+$app->get('/api/getCandidateById/{id}', function(Request $request, Response $response){
     $id = $request->getAttribute('id');
 
-    $sql = "SELECT * FROM customers WHERE id = $id";
+    $sql = "SELECT * FROM userregistration WHERE UID = $id AND isActive=1 AND role='Candidate'";
 
     try{
         // Get DB Object
@@ -51,6 +52,65 @@ $app->get('/api/customer/{id}', function(Request $request, Response $response){
         $customer = $stmt->fetch(PDO::FETCH_OBJ);
         $db = null;
         echo json_encode($customer);
+    } catch(PDOException $e){
+        echo '{"error": {"text": '.$e->getMessage().'}';
+    }
+});
+
+
+
+// Get Candidate personal details
+$app->get('/api/getCandidatePersonalDetails/{id}', function(Request $request, Response $response){
+    $id = $request->getAttribute('id');
+
+    $sql = "SELECT personal_details.pd_id,personal_details.UID,personal_details.dob,userregistration.fullname,personal_details.c_add FROM personal_details 
+            INNER JOIN userregistration 
+            ON userregistration.UID = personal_details.UID
+            AND personal_details.UID= $id
+            AND userregistration.isActive=1";
+
+    try{
+        // Get DB Object
+        $db = new db();
+        // Connect
+        $db = $db->connect();
+
+        $stmt = $db->query($sql);
+        $customer = $stmt->fetch(PDO::FETCH_OBJ);
+        $db = null;
+        echo json_encode($customer);
+    } catch(PDOException $e){
+        echo '{"error": {"text": '.$e->getMessage().'}';
+    }
+});
+
+
+// return login
+$app->post('/api/login/', function(Request $request, Response $response){
+    $email = $request->getParam('email');
+    $password = $request->getParam('password');
+
+    $sql = "SELECT * FROM userregistration WHERE email = ? AND password = ?";
+
+    try{
+        // Get DB Object
+        $db = new db();
+        // Connect
+        $db = $db->connect();
+
+        $stmt = $db->prepare($sql);
+
+        $stmt->bindParam(1, $email);
+        $stmt->bindParam(2, $password);
+  
+        $stmt->execute();
+        if($stmt->rowCount() > 0){
+            echo '{"notice": {"text": "true"}';
+        }
+        else {
+            echo '{"notice": {"text": "false"}';
+        }
+
     } catch(PDOException $e){
         echo '{"error": {"text": '.$e->getMessage().'}';
     }
