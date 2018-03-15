@@ -63,7 +63,9 @@ $app->get('/api/getCandidateById/{id}', function(Request $request, Response $res
 $app->get('/api/getCandidatePersonalDetails/{id}', function(Request $request, Response $response){
     $id = $request->getAttribute('id');
 
-    $sql = "SELECT personal_details.pd_id,personal_details.UID,personal_details.dob,userregistration.fullname,personal_details.c_add FROM personal_details 
+    $sql = "SELECT personal_details.pd_id,personal_details.UID,
+            personal_details.dob,userregistration.fullname,
+            personal_details.c_add FROM personal_details 
             INNER JOIN userregistration 
             ON userregistration.UID = personal_details.UID
             AND personal_details.UID= $id
