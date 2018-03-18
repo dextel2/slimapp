@@ -63,9 +63,7 @@ $app->get('/api/getCandidateById/{id}', function(Request $request, Response $res
 $app->get('/api/getCandidatePersonalDetails/{id}', function(Request $request, Response $response){
     $id = $request->getAttribute('id');
 
-    $sql = "SELECT personal_details.pd_id,personal_details.UID,
-            personal_details.dob,userregistration.fullname,
-            personal_details.c_add FROM personal_details 
+    $sql = "SELECT personal_details.pd_id,personal_details.UID,personal_details.dob,userregistration.fullname,personal_details.c_add FROM personal_details 
             INNER JOIN userregistration 
             ON userregistration.UID = personal_details.UID
             AND personal_details.UID= $id
@@ -89,33 +87,35 @@ $app->get('/api/getCandidatePersonalDetails/{id}', function(Request $request, Re
 
 // return login
 $app->post('/api/login/', function(Request $request, Response $response){
-
-    $email = $request->getParam('email');
-    $password = $request->getParam('password');
-    $role = 'Candidate';
-
-    $sql = "SELECT UID,fullname,email,c_date FROM userregistration 
-            WHERE email = ? 
-            AND password = ?";
-
+    
     try{
+        $email = $request->getParam('email');
+        $password = $request->getParam('password');
+        
         // Get DB Object
         $db = new db();
-        // Connect
-        $db = $db->connect();
-
-        $stmt = $db->prepare($sql);
-
-        $stmt->bindParam(1, $email);
-        $stmt->bindParam(2, $password);
         
+        // Connect
+        $sql = "SELECT password FROM userregistration WHERE email = ?";
+
+        $db = $db->connect();
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam(1, $email);
         $stmt->execute();
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        $hash = $data['password'];
+
+        if(password_verify($password,$hash)){
         if($stmt->rowCount() > 0){
-            echo '{"data": {"status":200,"response":'. json_encode($stmt->fetch(PDO::FETCH_OBJ)).'}}';
-            
+            echo '{"success":"200"}';
         }
         else {
-            echo '{"notice": {"status": 404}}';
+            echo '{"unauth":"500"}';
+        }
+    }
+    
+        else {
+            echo '{"notfound":"404"}';
         }
 
     } catch(PDOException $e){
