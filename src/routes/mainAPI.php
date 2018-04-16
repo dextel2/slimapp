@@ -63,12 +63,13 @@ $app->get('/api/getCandidateById/{id}', function(Request $request, Response $res
 $app->get('/api/getCandidatePersonalDetails/{id}', function(Request $request, Response $response){
     $id = $request->getAttribute('id');
 
-    $sql = "SELECT personal_details.pd_id,personal_details.UID,personal_details.dob,userregistration.fullname,personal_details.c_add FROM personal_details 
+    $sql = "SELECT personal_details.dob,userregistration.fullname,personal_details.c_add,
+                    personal_details.s_email,personal_details.c_con
+            FROM personal_details 
             INNER JOIN userregistration 
-            ON userregistration.UID = personal_details.UID
-            AND personal_details.UID= $id
-            AND userregistration.isActive=1";
-
+            ON 
+            personal_details.UID = $id";
+    
     try{
         // Get DB Object
         $db = new db();
@@ -96,7 +97,7 @@ $app->post('/api/login/', function(Request $request, Response $response){
         $db = new db();
         
         // Connect
-        $sql = "SELECT password FROM userregistration WHERE email = ?";
+        $sql = "SELECT password,UID FROM userregistration WHERE email = ?";
 
         $db = $db->connect();
         $stmt = $db->prepare($sql);
@@ -104,10 +105,10 @@ $app->post('/api/login/', function(Request $request, Response $response){
         $stmt->execute();
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
         $hash = $data['password'];
-
+        
         if(password_verify($password,$hash)){
         if($stmt->rowCount() > 0){
-            echo '{"success":"200"}';
+            echo '{"success":"200","ID":"'.$data['UID'].'"}';
         }
         else {
             echo '{"unauth":"500"}';
@@ -120,6 +121,30 @@ $app->post('/api/login/', function(Request $request, Response $response){
 
     } catch(PDOException $e){
         echo '{"error": {"text": '.$e->getMessage().'}';
+    }
+});
+
+//Customer Feedback
+$app->post('/api/feedback/', function(Request $request, Response $response){
+    
+    $uid = $request->getParam('uid');
+    $message = $request->getParam('message');
+    $sql = "INSERT INTO userfeedback (UID,message) VALUES (?,?)";
+
+    try {
+        // Get DB Object
+        $db = new db();
+        // Connect
+        $db = $db->connect();
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam(1,$uid);
+        $stmt->bindParam(2,$message);
+        
+        $stmt->execute();
+        echo '{"success": "200"}';
+    }
+    catch(PDOExeception $pdo){
+        echo '{"error": {"text": '. $pdo->getMessage().'}';
     }
 });
 
@@ -160,6 +185,36 @@ $app->post('/api/customer/add', function(Request $request, Response $response){
         echo '{"error": {"text": '.$e->getMessage().'}';
     }
 });
+
+
+
+$app->put('/api/updatedpwd/{id}/',function(Request $request,Response $response){
+    $id = $request->getAttribute('id');
+    $oldpassword = $request->getParam('oldpassword');
+    $newpassword = $request->getParam('newpassword');
+    $confirmpassword = $request->getParam('confirmpassword');
+    
+    $oldpass = "SELECT password FROM userregistration WHERE UID = ?";
+
+
+    try {
+        $db = $db->connect();
+        $stmt = $db->prepare($oldpass);
+        $stmt->bindParam(1, $id);
+        $stmt->execute();
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        $hash = $data['password'];
+        
+        if(password_verify($oldpassword,$hash)){
+            echo '{"success":"200"}';
+        }
+    }
+    catch (PDOException $pdo) {
+        echo '{"error": {"text": '.$e->getMessage().'}';
+    }
+
+});
+
 
 // Update Customer
 $app->put('/api/customer/update/{id}', function(Request $request, Response $response){
