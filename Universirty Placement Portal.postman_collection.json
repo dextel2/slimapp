@@ -1,0 +1,206 @@
+{
+	"info": {
+		"_postman_id": "dcc556f4-625b-4d11-af2e-14181994f103",
+		"name": "Universirty Placement Portal",
+		"description": "# Introduction\nThis API will help creating different webApps/ Android Apps/ and so on for the Placement Portal.\n\n# Overview\nDeveloper should know HTTP Status Codes and all the REQUESTS a server does such as GET/POST/PUT/DELETE\n\nThis API majorly uses GET/POST and PUT request\n\n# Authentication\nAs of now this API is open for every one\n\n# Error Codes\nWe're relying of 2 error code 404 and 501\n\n# Rate limit\nNo, there is no rate limit for sending requests, however, this API is hosted on free web server so there might be delay in response and the web server sleeps during some time between 10:00 PM and 12:00AM",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "https://karankeapi.000webhostapp.com/slimapp/public/index.php/api/login/",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://karankeapi.000webhostapp.com/slimapp/public/index.php/api/login/",
+					"protocol": "https",
+					"host": [
+						"karankeapi",
+						"000webhostapp",
+						"com"
+					],
+					"path": [
+						"slimapp",
+						"public",
+						"index.php",
+						"api",
+						"login",
+						""
+					]
+				},
+				"description": "Login method, takes 2 parameters, email password,"
+			},
+			"response": [
+				{
+					"id": "1e4acac6-8916-40aa-a6a8-22f6edb4bcfe",
+					"name": "Default",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://karankeapi.000webhostapp.com/slimapp/public/index.php/api/login/",
+							"protocol": "https",
+							"host": [
+								"karankeapi",
+								"000webhostapp",
+								"com"
+							],
+							"path": [
+								"slimapp",
+								"public",
+								"index.php",
+								"api",
+								"login",
+								""
+							]
+						}
+					},
+					"code": 200,
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": ""
+				}
+			]
+		},
+		{
+			"name": "https://karankeapi.000webhostapp.com/slimapp/public/index.php/api/login/",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://karankeapi.000webhostapp.com/slimapp/public/index.php/api/login/",
+					"protocol": "https",
+					"host": [
+						"karankeapi",
+						"000webhostapp",
+						"com"
+					],
+					"path": [
+						"slimapp",
+						"public",
+						"index.php",
+						"api",
+						"login",
+						""
+					]
+				},
+				"description": "Login method, user not found"
+			},
+			"response": [
+				{
+					"id": "478fd371-93b0-4b4f-be54-2b68bb704f6c",
+					"name": "Default",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://karankeapi.000webhostapp.com/slimapp/public/index.php/api/login/",
+							"protocol": "https",
+							"host": [
+								"karankeapi",
+								"000webhostapp",
+								"com"
+							],
+							"path": [
+								"slimapp",
+								"public",
+								"index.php",
+								"api",
+								"login",
+								""
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": ""
+				}
+			]
+		},
+		{
+			"name": "https://karankeapi.000webhostapp.com/slimapp/public/index.php/api/getCandidatePersonalDetails/{id}",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://karankeapi.000webhostapp.com/slimapp/public/index.php/api/getCandidatePersonalDetails/{id}",
+					"protocol": "https",
+					"host": [
+						"karankeapi",
+						"000webhostapp",
+						"com"
+					],
+					"path": [
+						"slimapp",
+						"public",
+						"index.php",
+						"api",
+						"getCandidatePersonalDetails",
+						"{id}"
+					]
+				},
+				"description": "returns, fullname, dob, address"
+			},
+			"response": [
+				{
+					"id": "2205d440-36bb-40e4-acb9-52f7592f9a14",
+					"name": "Default",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://karankeapi.000webhostapp.com/slimapp/public/index.php/api/getCandidatePersonalDetails/{id}",
+							"protocol": "https",
+							"host": [
+								"karankeapi",
+								"000webhostapp",
+								"com"
+							],
+							"path": [
+								"slimapp",
+								"public",
+								"index.php",
+								"api",
+								"getCandidatePersonalDetails",
+								"{id}"
+							]
+						}
+					},
+					"code": 200,
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": ""
+				}
+			]
+		}
+	]
+}

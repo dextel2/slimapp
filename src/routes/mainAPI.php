@@ -124,6 +124,35 @@ $app->post('/api/login/', function(Request $request, Response $response){
     }
 });
 
+
+$app->put('/api/updatepwd/{id}', function(Request $request, Response $response){
+    $id = $request->getAttribute("id");
+    $password = $request->getParam("password");
+    $confirmPassword = $request->getParam("confirmPassword");
+	
+	if($password==$confirmPassword) {
+    	$password = password_hash($password,PASSWORD_BCRYPT);
+    	$password = str_replace("$2y$","$2a$",$password);
+    	$sql = "UPDATE userregistration SET `password` = ? where UID=$id";
+    		try {
+        		// Get DB Object
+        		$db = new db();
+        		// Connect
+        		$db = $db->connect();
+        		$stmt = $db->prepare($sql);
+        		$stmt->bindParam(1,$password);
+        		$stmt->execute();
+        		echo '{"status":"200"}';
+    	} catch(PDOException $e){
+				echo '{"error": {"text": '.$e->getMessage().'}';
+		}
+}
+	else {
+    	echo '{"status":"400"}';
+	}
+});
+
+
 //Customer Feedback
 $app->post('/api/feedback/', function(Request $request, Response $response){
     
@@ -188,32 +217,7 @@ $app->post('/api/customer/add', function(Request $request, Response $response){
 
 
 
-$app->put('/api/updatedpwd/{id}/',function(Request $request,Response $response){
-    $id = $request->getAttribute('id');
-    $oldpassword = $request->getParam('oldpassword');
-    $newpassword = $request->getParam('newpassword');
-    $confirmpassword = $request->getParam('confirmpassword');
-    
-    $oldpass = "SELECT password FROM userregistration WHERE UID = ?";
 
-
-    try {
-        $db = $db->connect();
-        $stmt = $db->prepare($oldpass);
-        $stmt->bindParam(1, $id);
-        $stmt->execute();
-        $data = $stmt->fetch(PDO::FETCH_ASSOC);
-        $hash = $data['password'];
-        
-        if(password_verify($oldpassword,$hash)){
-            echo '{"success":"200"}';
-        }
-    }
-    catch (PDOException $pdo) {
-        echo '{"error": {"text": '.$e->getMessage().'}';
-    }
-
-});
 
 
 // Update Customer
