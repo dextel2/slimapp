@@ -184,7 +184,50 @@ $app->post('/api/login/', function(Request $request, Response $response){
     }
 });
 
+/**
+ * {Post} Apply Job : User Applies for Job
+ * @param : jd_id
+ * @param : UID
+ * @param : companyID
+ */
 
+$app->post('/api/apply/', function(Request $request, Response $response){
+    
+    $jd_ID = $request->getParam('jd_ID');
+	$UID = $request->getParam('UID');
+	$CompanyID = $request->getParam('CompanyID');
+
+    $sql = "INSERT INTO asjobs (jd_ID,UID,isSaved,isApplied,c_date,isActive,CompanyID) VALUES (?,?,0,1,NOW(),1,?)";
+
+    try {
+
+        $db = new db();
+        $db = $db->connect();
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam(1,$jd_ID);
+		$stmt->bindParam(2,$UID);
+		$stmt->bindParam(3,$CompanyID);
+        
+        $stmt->execute();
+        echo '{"success": "200"}';
+    }
+    catch(PDOExeception $pdo){
+        echo '{"error": {"text": '. $pdo->getMessage().'}';
+    }
+});
+
+
+/**
+ * {PUT} Update Password : Update password functionality for the user
+ * @param : userid
+ * @param : oldpassword
+ * @param : newpassword
+ * @param : confirmpassword
+ * 
+ * TODO:    bring old password as well from the user
+ * FIXME:   Update query such the job execution is done in only one query
+ *          rather than 2 seperate queries
+ */
 $app->put('/api/updatepwd/{id}', function(Request $request, Response $response){
     $id = $request->getAttribute("id");
     $password = $request->getParam("password");
