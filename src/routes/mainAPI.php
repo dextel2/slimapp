@@ -1,7 +1,8 @@
 <?php
 /**
  * @author : Yash Karanke (Developer)
- * @author : Dhwani Bhagat (Implementation and testing)
+ * @author : Dhwani Bhagat (Implementation)
+ * @author : Shane Paryan (Documentation and testing)
  * 
  * " Some might say PHP is bad, some might say PHP is good
  * I say it gets the work done
