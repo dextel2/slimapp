@@ -16,7 +16,12 @@ $app->add(function ($req, $res, $next) {
             ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
 });
 
-// Get All Candidates
+/**
+ * @param : none
+ * Tested Working : Just call this method and get all the  Active 
+ * 					Candidates and all their data
+ */
+
 $app->get('/api/getCandidates', function(Request $request, Response $response){
     $sql = "SELECT * FROM userregistration WHERE isActive=1 AND role='Candidate'";
 
@@ -35,6 +40,11 @@ $app->get('/api/getCandidates', function(Request $request, Response $response){
     }
 });
 
+/**
+ * @param : UID
+ * Tested Working : returns all the data of the Candidate
+ * 					whose ID is being passed
+ */
 
 // Get Single Candidate
 $app->get('/api/getCandidateById/{id}', function(Request $request, Response $response){
@@ -57,6 +67,12 @@ $app->get('/api/getCandidateById/{id}', function(Request $request, Response $res
     }
 });
 
+
+/**
+ * @param : Job ID
+ * Tested Working :
+ * @return : job_name an company_name
+ */
 
 
 // Get Saved Jobs
@@ -91,6 +107,13 @@ $app->get('/api/getSavedJobs/{id}', function(Request $request, Response $respons
     }
 });
 
+
+/**
+ * @param : none
+ * Tested Working : This API shows **all** the jobs to the user
+ */
+
+
 //Get Jobs to Apply
 $app->get('/api/getJobs/', function(Request $request, Response $response){
     //$userId = $request->getAttribute('id');
@@ -117,6 +140,16 @@ $app->get('/api/getJobs/', function(Request $request, Response $response){
     }
 });
 
+
+/**
+ * @note : DRY
+ * @param : {UID}
+ * Tested Working
+ * I know I am repeating and could've used previous API
+ * but that would be too much to filter through what I want 
+ * or what I do not want, and that is risky given the table
+ * architecture changes in future
+ */
 
 
 // Get Candidate personal details
@@ -145,6 +178,16 @@ $app->get('/api/getCandidatePersonalDetails/{id}', function(Request $request, Re
     }
 });
 
+
+/**
+ * @param : email
+ * @param : password
+ * Tested Working 
+ * I spent around good 10-15 hours to make this work and among
+ * all the methods this is the most error free
+ * @return : true if the details match
+ * @return : false if don't
+ */
 
 // return login
 $app->post('/api/login/', function(Request $request, Response $response){
@@ -187,10 +230,12 @@ $app->post('/api/login/', function(Request $request, Response $response){
 /**
  * {GET} Company ID : Get Company ID
  * @param : job_id
+ * Tested Working
+ * Gets the companyId from Job Id
  */
 
-$app->get('/api/getCompanyId/{id}', function(Request $request, Response $response){
-    $id = $request->getAttribute('id');
+$app->get('/api/getCompanyId/{jobid}', function(Request $request, Response $response){
+    $id = $request->getAttribute('jobid');
 
     $sql = "SELECT `UID` FROM job_details WHERE jd_ID=$id";
     
@@ -213,6 +258,10 @@ $app->get('/api/getCompanyId/{id}', function(Request $request, Response $respons
  * @param : jd_id
  * @param : UID
  * @param : companyID
+ * 
+ * Tested Working : In order to get @param : Company ID,
+ * make another GET Request to getCompanyId/{jobID} to get the Company ID
+ * and store it a string, and then use that string to make request on this API
  */
 
 $app->post('/api/apply/', function(Request $request, Response $response){
@@ -224,7 +273,6 @@ $app->post('/api/apply/', function(Request $request, Response $response){
     $sql = "INSERT INTO asjobs (jd_ID,UID,isSaved,isApplied,c_date,isActive,CompanyID) VALUES (?,?,0,1,NOW(),1,?)";
 
     try {
-
         $db = new db();
         $db = $db->connect();
         $stmt = $db->prepare($sql);
@@ -279,8 +327,13 @@ $app->put('/api/updatepwd/{id}', function(Request $request, Response $response){
 	}
 });
 
-
-//User Feedback
+/**
+ * @param : uid
+ * @param : message
+ * Tested Working
+ * Another good example of POST method 
+ * and prepared statement
+ */
 $app->post('/api/feedback/', function(Request $request, Response $response){
     
     $uid = $request->getParam('uid');
@@ -303,6 +356,12 @@ $app->post('/api/feedback/', function(Request $request, Response $response){
         echo '{"error": {"text": '. $pdo->getMessage().'}';
     }
 });
+
+
+/**
+ * BELOW ARE THE BOILER PLATE (EXAMPLES)
+ * PROVIVED BY @author : Brad Traversy
+ */
 
 // Add Customer
 $app->post('/api/customer/add', function(Request $request, Response $response){
