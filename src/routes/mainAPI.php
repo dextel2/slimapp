@@ -185,6 +185,30 @@ $app->post('/api/login/', function(Request $request, Response $response){
 });
 
 /**
+ * {GET} Company ID : Get Company ID
+ * @param : job_id
+ */
+
+$app->get('/api/getCompanyId/{id}', function(Request $request, Response $response){
+    $id = $request->getAttribute('id');
+
+    $sql = "SELECT `UID` FROM job_details WHERE jd_ID=$id";
+    
+    try{
+        $db = new db();
+        $db = $db->connect();
+
+        $stmt = $db->query($sql);
+        $customer = $stmt->fetch(PDO::FETCH_OBJ);
+        $db = null;
+        echo json_encode($customer);
+    } catch(PDOException $e){
+        echo '{"error": {"text": '.$e->getMessage().'}';
+    }
+});
+
+
+/**
  * {Post} Apply Job : User Applies for Job
  * @param : jd_id
  * @param : UID
