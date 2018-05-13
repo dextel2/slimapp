@@ -262,6 +262,9 @@ $app->get('/api/getCompanyId/{jobid}', function(Request $request, Response $resp
  * Tested Working : In order to get @param : Company ID,
  * make another GET Request to getCompanyId/{jobID} to get the Company ID
  * and store it a string, and then use that string to make request on this API
+ * 
+ * FIXME: Major bug is that even if the user is registered across the job
+ * this query will fire without any checks
  */
 
 $app->post('/api/apply/', function(Request $request, Response $response){
