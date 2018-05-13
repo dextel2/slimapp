@@ -59,6 +59,66 @@ $app->get('/api/getCandidateById/{id}', function(Request $request, Response $res
 
 
 
+// Get Saved Jobs
+$app->get('/api/getSavedJobs/{id}', function(Request $request, Response $response){
+    $userId = $request->getAttribute('id');
+
+    $sql = "SELECT job_details.job_name,job_details.company_name FROM job_details
+    JOIN
+    asjobs
+    ON
+    asjobs.jd_ID = job_details.jd_ID
+    WHERE asjobs.isSaved=1 and asjobs.isActive=1 and asjobs.UID = $userId";
+    
+    try{
+        // Get DB Object
+        $db = new db();
+        // Connect
+        $db = $db->connect();
+
+        $stmt = $db->query($sql);
+        $customer = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $db = null;
+        if($customer) {
+            echo json_encode($customer);
+        }
+        else {
+            echo '{"notfound":"404"}';
+        }
+
+    } catch(PDOException $e){
+        echo '{"error": {"text": '.$e->getMessage().'}';
+    }
+});
+
+//Get Jobs to Apply
+$app->get('/api/getJobs/', function(Request $request, Response $response){
+    //$userId = $request->getAttribute('id');
+
+    $sql = "SELECT jd_ID,job_name, company_name FROM job_details";
+    
+    try{
+        // Get DB Object
+        $db = new db();
+        // Connect
+        $db = $db->connect();
+
+        $stmt = $db->query($sql);
+        $customer = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $db = null;
+        if($customer) {
+            echo json_encode($customer);
+        } else {
+            echo '{"notfound":"404"}';
+        }
+
+    } catch(PDOException $e){
+        echo '{"error": {"text": '.$e->getMessage().'}';
+    }
+});
+
+
+
 // Get Candidate personal details
 $app->get('/api/getCandidatePersonalDetails/{id}', function(Request $request, Response $response){
     $id = $request->getAttribute('id');
@@ -146,14 +206,14 @@ $app->put('/api/updatepwd/{id}', function(Request $request, Response $response){
     	} catch(PDOException $e){
 				echo '{"error": {"text": '.$e->getMessage().'}';
 		}
-}
+	}
 	else {
     	echo '{"status":"400"}';
 	}
 });
 
 
-//Customer Feedback
+//User Feedback
 $app->post('/api/feedback/', function(Request $request, Response $response){
     
     $uid = $request->getParam('uid');
